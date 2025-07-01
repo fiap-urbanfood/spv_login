@@ -2,7 +2,7 @@ import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from core.database import Session
+from core.database import Session, engine
 from core.security import gerar_hash_senha
 from models.usuario_model import UsuarioModel
 
@@ -81,9 +81,8 @@ usuarios_exemplo = [
 ]
 
 async def popular_usuarios():
-    session: AsyncSession = Session()
-    
     try:
+        session = Session()
         async with session as db:
             # Verificar se já existem usuários
             query = select(UsuarioModel)
@@ -128,7 +127,15 @@ async def popular_usuarios():
                 
     except Exception as e:
         print(f"❌ Erro ao popular usuários: {e}")
-        await db.rollback()
+        if 'db' in locals():
+            await db.rollback()
+
+async def main():
+    try:
+        await popular_usuarios()
+    finally:
+        await engine.dispose()
+
 
 if __name__ == "__main__":
-    asyncio.run(popular_usuarios()) 
+    asyncio.run(main()) 

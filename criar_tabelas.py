@@ -13,7 +13,14 @@ async def create_tables() -> None:
     print("Tabelas criadas com sucesso...")
 
 
+async def main():
+    try:
+        await create_tables()
+    finally:
+        await engine.dispose()
+
+
 if __name__ == "__main__":
     import asyncio
 
-    asyncio.run(create_tables())
+    asyncio.run(main())

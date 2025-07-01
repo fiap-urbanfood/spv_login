@@ -26,5 +26,21 @@ async def test_connection():
         print(f"Erro ao conectar: {e}")
 
 
+def main():
+    try:
+        asyncio.run(test_connection())
+    except RuntimeError as e:
+        if "Event loop is closed" in str(e):
+            # Se o loop já estiver fechado, crie um novo
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                loop.run_until_complete(test_connection())
+            finally:
+                loop.close()
+        else:
+            raise e
+
+
 if __name__ == "__main__":
-    asyncio.run(test_connection())
+    main()
