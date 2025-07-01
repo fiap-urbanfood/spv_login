@@ -7,7 +7,18 @@ from sqlalchemy.ext.declarative import declarative_base
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
-    DB_URL: str = "sqlite+aiosqlite:///local.db"
+    
+    # MySQL RDS Configuration
+    DB_HOST: str = "rds-mysql.c8gkm8vsq6yc.us-east-1.rds.amazonaws.com"
+    DB_NAME: str = "urbanfood"
+    DB_USERNAME: str = "urbanfood"
+    DB_PASSWORD: str = "Urbanf00dFiap"
+    DB_PORT: int = 3306
+    
+    @property
+    def DB_URL(self) -> str:
+        return f"mysql+aiomysql://{self.DB_USERNAME}:{quote_plus(self.DB_PASSWORD)}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    
     DBBaseModel: ClassVar = declarative_base()
 
     JWT_SECRET: str = "P7pK6xHhw04VMybl0VqeYIaGXWnJuADzQQw-pY1rwP8"
