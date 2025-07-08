@@ -1,10 +1,10 @@
-from fastapi import FastAPI
-
+from fastapi import FastAPI, status
+from pydantic import BaseModel
 from core.configs import settings
 from api.v1.api import api_router
+import uvicorn
 
-
-app = FastAPI(title="Sistema de Processamento de Vídeo (Microserviço de Login)  ")
+app = FastAPI(title="Sistema de Processamento de Vídeo (Microserviço de Login)")
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 class HealthCheck(BaseModel):
