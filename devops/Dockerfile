@@ -10,27 +10,29 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Config Tools
-RUN apt-get update && apt-get upgrade -y \
- && apt-get --no-install-recommends install -y curl \
+RUN apt-get update && apt-get --no-install-recommends install -y \ 
     bash \
+    curl \
+    less \
     netcat-openbsd \
+    net-tools \
+    procps \
     sudo \
     vim \
-    less \
-    net-tools \
-    procps
+    && apt-get clean
 
 # Instalar dependências do sistema
-RUN apt-get --no-install-recommends install -y gcc \
+RUN apt-get --no-install-recommends install -y \
     default-libmysqlclient-dev \
+    gcc \
     pkg-config \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
 # Config Timezones
 RUN apt-get --no-install-recommends install -y tzdata \
   && cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime \
   && echo "America/Sao_Paulo" > /etc/timezone \
-  apt-get clean all
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Add User
 RUN addgroup --gid 1000 "$USER"
@@ -46,9 +48,9 @@ WORKDIR "$HOME/app"
 
 # Copia os arquivos do projeto
 COPY --chown="$USER:$USER" --chmod=750 ./api $HOME/app/api
-COPY --chown="$USER:$USER" --chmod=750 ./core $HOME/app/core
-COPY --chown="$USER:$USER" --chmod=750 ./models $HOME/app/models
-COPY --chown="$USER:$USER" --chmod=750 ./schemas $HOME/app/schemas
+COPY --chown="$USER:$USER" --chmod=644 ./core $HOME/app/core
+COPY --chown="$USER:$USER" --chmod=644 ./models $HOME/app/models
+COPY --chown="$USER:$USER" --chmod=644 ./schemas $HOME/app/schemas
 
 COPY --chown="$USER:$USER" --chmod=640 ./popular_usuarios.py $HOME/app
 COPY --chown="$USER:$USER" --chmod=640 ./criar_tabelas.py $HOME/app
