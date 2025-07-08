@@ -2,8 +2,20 @@
 .DS_Store
 Thumbs.db
 
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI
+.codeclimate.yml
+.travis.yml
+.taskcluster.yml
+
 # Arquivos de desenvolvimento Python
 __pycache__/
+**/__pycache__/
+**/*.py[cod]
 *.py[cod]
 *$py.class
 *.so
@@ -19,6 +31,8 @@ lib64/
 parts/
 sdist/
 var/
+devops/
+k8s/
 wheels/
 *.egg-info/
 .installed.cfg
@@ -60,13 +74,10 @@ local.db
 .env.test.local
 .env.production.local
 
-# Git
-.git/
-.gitignore
-
 # Docker
-Dockerfile*
-docker-compose*
+docker-compose.yml
+Dockerfile
+.docker
 .dockerignore
 
 # Documentação
@@ -87,3 +98,7 @@ coverage.xml
 # Arquivos de backup
 *.bak
 *.backup 
+
+# Python mode for VIM
+.ropeproject
+**/.ropeproject
