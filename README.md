@@ -10,16 +10,16 @@ Sistema de Processamento de Vídeo (Microserviço de Login)
 Etapas do Pipeline via github actions:
 
 1.1 Build da Applicação:
-![CI/CD - BUILD](devops/CICD/CICD-URBANFOOD-BUILD.png)
+![CI/CD - BUILD](devops/CICD/CICD-SPV_LOGIN-BUILD.png)
 
 1.2 Sonar para análise e monitoramento contínuo da qualidade do código.
-![CI/CD - SONAR](devops/CICD/CICD-URBANFOOD-SONAR.png)
+![CI/CD - SONAR](devops/CICD/CICD-SPV_LOGIN-SONAR.png)
 
 1.3 Push da Imagem para o ECR.
-![CI/CD - ECR](devops/CICD/CICD-URBANFOOD-ECR.png)
+![CI/CD - ECR](devops/CICD/CICD-SPV_LOGIN-ECR.png)
 
 1.4 Deploy no EKS.
-![CI/CD - EKS](devops/CICD/CICD-URBANFOOD-EKS.png)
+![CI/CD - EKS](devops/CICD/CICD-SPV_LOGIN-EKS.png)
 
 # ###########################################################
 # 💻 Deploy via DockerFile
