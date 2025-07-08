@@ -1,6 +1,6 @@
 # 💻 Projeto spv_login
 
-Sistema de Processamento de Vídeo (Micro serviço de Login)
+Sistema de Processamento de Vídeo (Microserviço de Login)
 
 # ###########################################################
 # 💻 Deploy via Github Actions
@@ -52,7 +52,7 @@ docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/spv_login/login:lates
 
 1.5 Rodando o container local..
 ``` bash
-docker run -dit -p 8003:8003 --name=app-login app-login:$API_IMAGE_TAG
+docker run -dit -p 8000:8000 --name=app-login app-login:$API_IMAGE_TAG
 ```
 
 1.6 Acesso a API..
