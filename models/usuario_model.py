@@ -1,10 +1,10 @@
 from sqlalchemy import Integer, String, Column, Boolean
 from sqlalchemy.orm import relationship
 
-from core.configs import settings
+from core.database import Base
 
 
-class UsuarioModel(settings.DBBaseModel):
+class UsuarioModel(Base):
     __tablename__ = "usuarios"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
