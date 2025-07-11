@@ -13,16 +13,16 @@ Etapas do Pipeline via github actions:
 ![CI/CD - PULLREQUEST](devops/CICD/CICD-SPV_LOGIN-PULLREQUEST.png)
 
 1.2 Sonar para análise e monitoramento contínuo da qualidade do código.
-![CI/CD - SONAR](devops/CICD/CICD-URBANFOOD-SONAR.png)
+![CI/CD - SONAR](devops/CICD/CICD-SPV_LOGIN-SONAR.png)
 
 1.3 Build da Aplicação:
-![CI/CD - BUILD](devops/CICD/CICD-URBANFOOD-BUILD.png)
+![CI/CD - BUILD](devops/CICD/CICD-SPV_LOGIN-BUILD.png)
 
 1.4 Push da Imagem para o ECR.
-![CI/CD - ECR](devops/CICD/CICD-URBANFOOD-ECR.png)
+![CI/CD - ECR](devops/CICD/CICD-SPV_LOGIN-ECR.png)
 
 1.5 Deploy no EKS.
-![CI/CD - EKS](devops/CICD/CICD-URBANFOOD-EKS.png)
+![CI/CD - EKS](devops/CICD/CICD-SPV_LOGIN-EKS.png)
 
 # ###########################################################
 # 💻 Deploy via DockerFile
