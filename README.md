@@ -81,7 +81,7 @@ kubectl apply -f namespace.yml
 
 2.3 Acessando o namespace, "Após já ter sido criado"
 ``` bash
-kubectl config set-context --current --namespace=login
+kubectl config set-context --current --namespace=video-system
 ```
 
 Após criar e configurar a infra executamos o github actions do projeto. 

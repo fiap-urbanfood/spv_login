@@ -4,9 +4,9 @@ metadata:
   labels:
     app: app-login
   name: deployment-login
-  namespace: login
+  namespace: video-system
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
   minReadySeconds: 60
   strategy:
     rollingUpdate:
-      maxSurge: 2
+      maxSurge: 1
       maxUnavailable: 1
     type: RollingUpdate      
   template:

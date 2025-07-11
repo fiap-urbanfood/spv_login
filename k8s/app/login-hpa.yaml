@@ -2,14 +2,14 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: hpa-login
-  namespace: login
+  namespace: video-system
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: deployment-login
-  minReplicas: 1
-  maxReplicas: 2
+  minReplicas: 2
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:
