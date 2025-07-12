@@ -1,5 +1,5 @@
 ---
-name: Deploy App
+name: Deploy LOGIN
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - main
 
 env:
+  ECR_REPOSITORY: spv/login
   AWS_REGION: ${{ vars.AWS_REGION }}
   EKS_CLUSTER_NAME: ${{ vars.EKS_CLUSTER_NAME }}
 
@@ -33,13 +34,16 @@ jobs:
         run: |
               python -m pip install --upgrade pip
               pip install -r requirements.txt
+
       - name: Run pytest
         run: pytest -W ignore::DeprecationWarning
 
   build:
     name: Build APP
     runs-on: ubuntu-latest
-    needs: [pytest]
+    needs: pytest
+    outputs:
+      tagVersion: ${{ steps.imageVersion.outputs.version }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -62,14 +66,18 @@ jobs:
         run: |
           bash ./devops/git_update.sh -v patch
 
+      - id: imageVersion
+        run: echo "version=${{ steps.increment-git-tag.outputs.git-tag }}" >> "$GITHUB_OUTPUT"
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           IMAGE_RELEASE: ${{ steps.increment-git-tag.outputs.git-tag }}
           ECR_REGISTRY:  ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: spv_login/login
           IMAGE_TAG: latest
         run: |
+          echo "Deploy Version: $IMAGE_RELEASE"
+          echo "Repository Autenticate: $ECR_REGISTRY"
           docker build --no-cache --progress=plain -f devops/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_RELEASE .
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_RELEASE $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG          
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_RELEASE
@@ -78,15 +86,14 @@ jobs:
   deploy:
     name: Deploy EKS
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Automatic Tagging of Releases
-        id: increment-git-tag
-        run: |
-          bash ./devops/git_update.sh -v patch
+      - env:
+          IMG_RELEASE: ${{ needs.build.outputs.tagVersion }}
+        run: echo "ECR_REPOSITORY = $ECR_REPOSITORY -- IMAGE_RELEASE = $IMG_RELEASE"
 
       - name: Config AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -95,14 +102,22 @@ jobs:
           audience: sts.amazonaws.com
           role-to-assume: arn:aws:iam::857378965163:role/github-actions
     
+      - name: Replace Image Release
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: 'k8s/app/login-deployment.yaml'
+          search-text: 'IMAGE_VERSION'
+          replacement-text: ${{ needs.build.outputs.tagVersion }}
+
       - name: Update kube config
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-      - name: Deploy to APP EKS
+      - name: Deploy EKS
         env:
-          IMAGE_RELEASE: ${{ steps.increment-git-tag.outputs.git-tag }}      
+          IMG_RELEASE: ${{ needs.build.outputs.tagVersion }}
         run: |
-          echo "Deploy Version: $IMAGE_RELEASE"
+          echo "Deploy Version: $IMG_RELEASE"
+          echo "Deploy IMAGE: $ECR_REPOSITORY"
           kubectl apply -f k8s/namespace.yml
           kubectl apply -f k8s/app/login-service.yaml
           kubectl apply -f k8s/app/login-configmap.yaml
