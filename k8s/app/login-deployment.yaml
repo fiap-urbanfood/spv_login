@@ -24,7 +24,13 @@ spec:
     spec:
       containers:
         - name: app-login
-          image: 857378965163.dkr.ecr.us-east-1.amazonaws.com/spv_login/login:latest
+          image: 857378965163.dkr.ecr.us-east-1.amazonaws.com/spv/login:IMAGE_VERSION
+          imagePullPolicy: Always
+          env:
+          - name: env
+            value: prod
+          - name: AWS_REGION
+            value: us-east-1            
           ports:
             - containerPort: 8000
           envFrom:
